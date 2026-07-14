@@ -2,15 +2,6 @@
 
 A full-stack reservation system for cultural heritage sites with real-time capacity updates, concurrency-safe booking, and hardened security.
 
-## Quick Start (Docker)
-
-```bash
-docker-compose up --build
-```
-
-- App: http://localhost
-- API: http://localhost/api
-
 **Demo accounts (after seeding):**
 - Admin: `admin@heritage.com` / `Admin@1234`
 - User: `user@heritage.com` / `User@1234`
