@@ -15,8 +15,8 @@ export default function Layout() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleLogout = async () => {
-    await dispatch(logout());
+  const handleLogout = () => {
+    dispatch(logout());
     navigate('/login');
   };
 

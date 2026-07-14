@@ -35,6 +35,7 @@ export interface Reservation {
 }
 
 export interface AuthResponse {
+  token: string;
   user: User;
 }
 
