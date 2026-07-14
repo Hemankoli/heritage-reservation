@@ -39,7 +39,7 @@ export async function createReservation(req: Request, res: Response): Promise<vo
   try {
     let result;
 
-    if (redisClient.isReady) {
+    if (bookingQueue && redisClient.isReady) {
       // Redis available — use queue for concurrency control
       const job = await bookingQueue.add('book', params);
       result = await job.waitUntilFinished(getQueueEvents(), 15_000);

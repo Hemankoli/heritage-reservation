@@ -14,14 +14,19 @@ export interface BookingJobResult {
   available_tickets: number;
 }
 
-const connection = { url: env.REDIS_URL };
+const redisEnabled = Boolean(env.REDIS_URL);
+const connection = { url: env.REDIS_URL ?? 'redis://localhost:6379' };
 
-export const bookingQueue = new Queue<BookingJobData, BookingJobResult>('bookings', {
-  connection,
-  defaultJobOptions: { attempts: 1, removeOnComplete: 100, removeOnFail: 100 },
-});
+export const bookingQueue = redisEnabled
+  ? new Queue<BookingJobData, BookingJobResult>('bookings', {
+      connection,
+      defaultJobOptions: { attempts: 1, removeOnComplete: 100, removeOnFail: 100 },
+    })
+  : null;
 
-export function startBookingWorker(): Worker<BookingJobData, BookingJobResult> {
+export function startBookingWorker(): Worker<BookingJobData, BookingJobResult> | null {
+  if (!redisEnabled) return null;
+
   const worker = new Worker<BookingJobData, BookingJobResult>(
     'bookings',
     async (job: Job<BookingJobData, BookingJobResult>) => processBooking(job.data),

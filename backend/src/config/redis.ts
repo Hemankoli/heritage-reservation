@@ -2,10 +2,10 @@ import { createClient } from 'redis';
 import { env } from './env';
 
 const client = createClient({
-  url: env.REDIS_URL,
+  url: env.REDIS_URL ?? 'redis://localhost:6379',
   socket: {
     reconnectStrategy: (retries) => {
-      if (retries >= 3) return false; // stop retrying after 3 attempts
+      if (retries >= 3) return false;
       return Math.min(retries * 500, 2000);
     },
   },
@@ -13,24 +13,15 @@ const client = createClient({
 
 let connected = false;
 
-client.on('error', () => {
-  // suppress repeated error spam — connection state is tracked via `connected`
-});
-
-client.on('ready', () => {
-  connected = true;
-  console.log('Redis connected');
-});
-
-client.on('end', () => {
-  connected = false;
-});
+client.on('error', () => { });
+client.on('ready', () => { connected = true; console.log('Redis connected'); });
+client.on('end', () => { connected = false; });
 
 export async function connectRedis(): Promise<void> {
+  if (!env.REDIS_URL) return;
   try {
     await client.connect();
   } catch {
-    console.warn('Redis unavailable — caching disabled, falling back to MongoDB');
   }
 }
 
@@ -52,7 +43,6 @@ export async function setCache(key: string, value: unknown, ttlSeconds: number):
   try {
     await client.set(key, JSON.stringify(value), { EX: ttlSeconds });
   } catch {
-    // non-fatal
   }
 }
 
@@ -61,6 +51,5 @@ export async function deleteCache(...keys: string[]): Promise<void> {
   try {
     await client.del(keys);
   } catch {
-    // non-fatal
   }
 }

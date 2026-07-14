@@ -3,7 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-// eslint-disable-next-line @typescript-eslint/no-require-imports
 const compression = require('compression') as () => express.RequestHandler;
 import rateLimit from 'express-rate-limit';
 import { env } from './config/env';

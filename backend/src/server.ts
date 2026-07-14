@@ -27,12 +27,23 @@ async function main() {
 
   const worker = startBookingWorker();
 
+  httpServer.on('clientError', (err: NodeJS.ErrnoException, socket) => {
+    if (err.code === 'ECONNRESET') { socket.destroy(); return; }
+    socket.end('HTTP/1.1 400 Bad Request\r\n\r\n');
+  });
+
   httpServer.listen(env.PORT, () => {
     console.log(`Server running on http://localhost:${env.PORT}`);
   });
 
+  process.on('uncaughtException', (err: NodeJS.ErrnoException) => {
+    if (err.code === 'ECONNRESET') return;
+    console.error('Uncaught exception:', err);
+    process.exit(1);
+  });
+
   process.on('SIGTERM', async () => {
-    await worker.close();
+    if (worker) await worker.close();
     httpServer.close();
     process.exit(0);
   });

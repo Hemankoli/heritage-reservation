@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import type { TimeSlot } from '../types/index';
 
 interface Props {

@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_BACKEND_URL ?? '/api';
+const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
 let authToken: string | null = null;
 
