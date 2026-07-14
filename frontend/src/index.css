@@ -311,3 +311,33 @@ body::after {
 
 /* ── Admin matrix cell flash ───────────────────────────────── */
 .cell-flash { animation: cellPulse 0.9s ease; }
+
+/* ── Navbar responsive ─────────────────────────────────────── */
+.nav-inner { padding: 0 2rem; }
+
+@media (max-width: 768px) {
+  .nav-inner { padding: 0 1rem; }
+  .nav-actions { gap: 6px; }
+
+  /* Hide the "Reservations" tagline under the brand wordmark */
+  .brand-subtitle { display: none; }
+
+  /* Strip the user chip background — just show the avatar circle */
+  .nav-user-chip {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    margin-right: 2px !important;
+  }
+
+  /* Hide the user's full name — avatar initial is enough */
+  .nav-username { display: none; }
+}
+
+@media (max-width: 480px) {
+  /* On very small screens also hide the brand wordmark — icon only */
+  .brand-text { display: none; }
+
+  /* Tighten button padding so they fit */
+  .btn-sm { padding: 0.4rem 0.65rem !important; font-size: 0.7rem !important; }
+}

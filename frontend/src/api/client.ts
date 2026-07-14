@@ -1,17 +1,8 @@
 const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/api`;
 
-let authToken: string | null = null;
-
-export function setAuthToken(token: string | null) {
-  authToken = token;
-}
-
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json', ...(init.headers as Record<string, string> ?? {}) };
-  if (authToken) {
-    headers['Authorization'] = `Bearer ${authToken}`;
-  }
-  const res = await fetch(`${BASE_URL}${path}`, { ...init, headers });
+  const res = await fetch(`${BASE_URL}${path}`, { ...init, headers, credentials: 'include' });
   const data = await res.json();
   if (!res.ok) throw new Error((data as { error?: string }).error ?? `HTTP ${res.status}`);
   return data as T;

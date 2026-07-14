@@ -15,8 +15,8 @@ export default function Layout() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleLogout = () => {
-    dispatch(logout());
+  const handleLogout = async () => {
+    await dispatch(logout());
     navigate('/login');
   };
 
@@ -32,12 +32,12 @@ export default function Layout() {
         transition: 'all 0.35s ease',
       }}>
         <div style={{
-          maxWidth: 1320, margin: '0 auto', padding: '0 2rem',
+          maxWidth: 1320, margin: '0 auto',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           height: 66,
-        }}>
+        }} className="nav-inner">
           {/* Brand */}
-          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 14 }}>
+          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 14, flexShrink: 0 }}>
             <div style={{
               width: 38, height: 38,
               background: 'linear-gradient(135deg, #d4b270 0%, #7a5a1a 100%)',
@@ -48,7 +48,7 @@ export default function Layout() {
             }}>
               ⬡
             </div>
-            <div style={{ lineHeight: 1.2 }}>
+            <div style={{ lineHeight: 1.2 }} className="brand-text">
               <div style={{
                 fontFamily: 'Cormorant Garamond, serif',
                 fontSize: '1.4rem', fontWeight: 500,
@@ -61,14 +61,14 @@ export default function Layout() {
                 fontSize: '0.58rem', fontWeight: 600,
                 letterSpacing: '0.22em', textTransform: 'uppercase',
                 color: 'var(--gold)', marginTop: 1,
-              }}>
+              }} className="brand-subtitle">
                 Reservations
               </div>
             </div>
           </Link>
 
           {/* Nav actions */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }} className="nav-actions">
             {user ? (
               <>
                 <div style={{
@@ -77,7 +77,8 @@ export default function Layout() {
                   background: 'rgba(255,255,255,0.03)',
                   borderRadius: 8,
                   border: '1px solid rgba(255,255,255,0.06)',
-                }}>
+                  flexShrink: 0,
+                }} className="nav-user-chip">
                   <div style={{
                     width: 24, height: 24, borderRadius: '50%',
                     background: 'linear-gradient(135deg, var(--gold) 0%, #7a5a1a 100%)',
@@ -87,7 +88,7 @@ export default function Layout() {
                   }}>
                     {user.name.charAt(0).toUpperCase()}
                   </div>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--cream-dim)', fontWeight: 300 }}>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--cream-dim)', fontWeight: 300 }} className="nav-username">
                     {user.name}
                   </span>
                 </div>
@@ -100,7 +101,14 @@ export default function Layout() {
                   >
                     Dashboard
                   </NavLink>
-                )}
+                )}  
+                {user.role !== 'admin' && <NavLink
+                  to="/my-bookings"
+                  className="btn btn-ghost btn-sm"
+                  style={({ isActive }) => isActive ? { color: 'var(--gold)', borderBottom: '1px solid var(--gold)' } : {}}
+                >
+                  My Bookings
+                </NavLink>}
                 <button onClick={handleLogout} className="btn btn-ghost btn-sm">
                   Sign Out
                 </button>

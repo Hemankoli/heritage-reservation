@@ -108,7 +108,10 @@ export async function cancelReservation(req: Request, res: Response): Promise<vo
 
 export async function getUserReservations(req: Request, res: Response): Promise<void> {
   if (!req.user) { res.status(401).json({ error: 'Unauthorized' }); return; }
-  const reservations = await Reservation.find({ user: req.user.sub, status: 'confirmed' })
+  const includeAll = req.query['includeAll'] === 'true';
+  const filter: Record<string, unknown> = { user: req.user.sub };
+  if (!includeAll) filter['status'] = 'confirmed';
+  const reservations = await Reservation.find(filter)
     .populate('timeSlot')
     .populate('site', 'name location')
     .sort({ createdAt: -1 });

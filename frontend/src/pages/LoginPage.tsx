@@ -23,7 +23,7 @@ export default function LoginPage() {
   const onSubmit = async (data: FormData) => {
     try {
       const res = await api.post<AuthResponse>('/auth/login', data);
-      dispatch(setCredentials({ user: res.user, token: res.token }));
+      dispatch(setCredentials({ user: res.user }));
       navigate(res.user.role === 'admin' ? '/admin' : '/');
     } catch (err) {
       setError('root', { message: err instanceof Error ? err.message : 'Login failed' });

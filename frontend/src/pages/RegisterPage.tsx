@@ -24,7 +24,7 @@ export default function RegisterPage() {
   const onSubmit = async (data: FormData) => {
     try {
       const res = await api.post<AuthResponse>('/auth/register', data);
-      dispatch(setCredentials({ user: res.user, token: res.token }));
+      dispatch(setCredentials({ user: res.user }));
       navigate('/');
     } catch (err) {
       setError('root', { message: err instanceof Error ? err.message : 'Registration failed' });

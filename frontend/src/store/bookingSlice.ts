@@ -4,13 +4,22 @@ import type { Reservation } from '../types/index';
 
 interface BookingState {
   myReservations: Reservation[];
+  allReservations: Reservation[];
+  allReservationsLoading: boolean;
+  allReservationsError: string | null;
   loading: boolean;
   error: string | null;
   lastBooking: { reservationId: string; available_tickets: number } | null;
 }
 
 const initialState: BookingState = {
-  myReservations: [], loading: false, error: null, lastBooking: null,
+  myReservations: [],
+  allReservations: [],
+  allReservationsLoading: false,
+  allReservationsError: null,
+  loading: false,
+  error: null,
+  lastBooking: null,
 };
 
 export const createBooking = createAsyncThunk(
@@ -30,6 +39,11 @@ export const fetchMyReservations = createAsyncThunk(
   () => api.get<Reservation[]>('/reservations/my')
 );
 
+export const fetchAllReservations = createAsyncThunk(
+  'booking/fetchAll',
+  () => api.get<Reservation[]>('/reservations/my?includeAll=true')
+);
+
 const bookingSlice = createSlice({
   name: 'booking',
   initialState,
@@ -45,6 +59,18 @@ const bookingSlice = createSlice({
       .addCase(cancelBooking.fulfilled, (state, action) => {
         const id = action.meta.arg as string;
         state.myReservations = state.myReservations.filter((r) => r._id !== id);
+      })
+      .addCase(fetchAllReservations.pending, (state) => {
+        state.allReservationsLoading = true;
+        state.allReservationsError = null;
+      })
+      .addCase(fetchAllReservations.fulfilled, (state, action) => {
+        state.allReservationsLoading = false;
+        state.allReservations = action.payload;
+      })
+      .addCase(fetchAllReservations.rejected, (state, action) => {
+        state.allReservationsLoading = false;
+        state.allReservationsError = action.error.message ?? 'Failed to load bookings';
       });
   },
 });
