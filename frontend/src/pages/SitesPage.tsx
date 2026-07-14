@@ -60,7 +60,7 @@ export default function SitesPage() {
       </section>
 
       {/* ── Sites grid ─────────────────────────────────────── */}
-      <section style={{ maxWidth: 1320, margin: '0 auto', padding: '1.5rem 2rem 6rem' }}>
+      <section style={{ maxWidth: 1320, margin: '0 auto', padding: '1.5rem 2rem 6rem' }} className="sites-section">
         {sitesLoading ? (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16, padding: '6rem 0' }}>
             <div className="spinner" />
@@ -80,8 +80,9 @@ export default function SitesPage() {
         ) : (
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(min(340px, 100%), 1fr))',
             gap: '1.5rem',
+            justifyItems: 'center',
           }}>
             {sites.map((site, i) => (
               <SiteCard key={site._id} site={site} index={i} onBook={handleBook} />

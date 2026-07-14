@@ -341,3 +341,8 @@ body::after {
   /* Tighten button padding so they fit */
   .btn-sm { padding: 0.4rem 0.65rem !important; font-size: 0.7rem !important; }
 }
+
+/* ── Sites grid mobile ─────────────────────────────────────── */
+@media (max-width: 640px) {
+  .sites-section { padding-left: 1rem !important; padding-right: 1rem !important; }
+}
